@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>zusa - ily</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'VT323', monospace; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      cursor: auto;
+      perspective: 800px;
+    }
+
+    .tv-container {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 800px;
+      aspect-ratio: 16 / 9;
+      translate: -50% -50%;
+      box-shadow: 0 0 30px #1f183d, 0 0 80px rgb(131, 107, 235);
+      border-radius: 8px;
+      overflow: hidden;
+      display: none;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.15s ease;
+    }
+
+    .tv-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      transform-style: preserve-3d;
+    }
+
+    .tv-screen video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 110%;           
+      height: 110%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      filter: brightness(0.8) contrast(1.2) saturate(1.3);
+      backface-visibility: hidden;
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px);
+      mix-blend-mode: overlay;
+      animation: flicker 0.1s infinite;
+      transform: translateZ(2px);
+    }
+
+    .vhs-noise {
+      position: absolute;
+      inset: 0;
+      background: repeating-radial-gradient(circle, rgba(255,255,255,0.03), transparent 4px);
+      animation: noise 0.2s infinite;
+      transform: translateZ(4px);
+    }
+
+    @keyframes flicker { 0%,100%{opacity:.06;} 50%{opacity:.12;} }
+    @keyframes noise { 0%,100%{opacity:.02;} 25%,75%{opacity:.08;} 50%{opacity:.05;} }
+
+    .tv-frame {
+      position: absolute;
+      inset: 0;
+      border: 0px solid #222;
+      border-radius: 8px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      transform: translateZ(6px);
+    }
+
+    .click-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #302076;
+      font-size: 40px;
+      cursor: pointer;
+      z-index: 10;
+      text-align: center;
+      animation: pulse 1.5s infinite;
+      transition: opacity 0.8s ease, transform 0.5s ease;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="click-overlay" id="clickOverlay">
+    ily
+  </div>
+
+  <div class="tv-container" id="tv">
+    <div class="tv-screen">
+      <video id="bgvid" loop playsinline>
+        <source src="edit.mp4" type="video/mp4">
+      </video>
+      <div class="scanlines"></div>
+      <div class="vhs-noise"></div>
+      <div class="tv-frame"></div>
+    </div>
+  </div>
+
+<script>
+  const clickOverlay = document.getElementById('clickOverlay');
+  const tv = document.getElementById('tv');
+  const vid = document.getElementById('bgvid');
+
+   // 2s change
+  setTimeout(() => clickOverlay.textContent = '<3', 2000);
+
+  // 3D
+  document.addEventListener('mousemove', (e) => {
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+    const rotateX = y * -20;
+    const rotateY = x * 20;
+    tv.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+  });
+
+  document.addEventListener('mouseleave', () => {
+    tv.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+  });
+
+  // click to reveal
+  clickOverlay.addEventListener('click', () => {
+    clickOverlay.style.display = 'none';
+    tv.style.display = 'block';
+    vid.muted = false;
+    vid.play().catch(err => {
+      console.log('autoplay failed :<', err);
+      
+    });
+  });
+</script>
+</body>
+</html>
