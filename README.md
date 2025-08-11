@@ -1,0 +1,1 @@
+<p align="center"><img src="https://socialify.git.ci/notazusaa/stay-frieren/image?custom_description=Simple+website+for+my+old+motion+graphic+video+edit+i+did+a+few+months+ago.&amp;description=1&amp;language=1&amp;name=1&amp;pattern=Plus&amp;theme=Auto" alt="project-image"></p>
